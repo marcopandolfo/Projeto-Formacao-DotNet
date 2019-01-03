@@ -27,9 +27,9 @@ namespace CasaDoCodigo.Repositories
             {
                 if (!dbSet.Where(p => p.Codigo == livro.Codigo).Any())
                 {
-                    dbSet.Add(new Produto(livro.Codigo, livro.Nome, livro.Preco));
 
-                    categoriaRepository.NovaCategoria(livro.Categoria); //Vai criar a categoria, se necessario
+                    Categoria categoria = await categoriaRepository.NovaCategoria(livro.Categoria); //Vai criar a categoria, se necessario
+                    dbSet.Add(new Produto(livro.Codigo, livro.Nome, livro.Preco, categoria)); // Salva o produto
                 }
             }
             await contexto.SaveChangesAsync();

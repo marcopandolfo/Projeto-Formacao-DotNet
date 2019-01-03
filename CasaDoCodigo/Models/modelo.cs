@@ -31,11 +31,12 @@ namespace CasaDoCodigo.Models
         public Categoria Categoria { get; set; }
 
 
-        public Produto(string codigo, string nome, decimal preco)
+        public Produto(string codigo, string nome, decimal preco, Categoria categoria)
         {
             this.Codigo = codigo;
             this.Nome = nome;
             this.Preco = preco;
+            this.Categoria = categoria;
         }
     }
 
@@ -141,7 +142,6 @@ namespace CasaDoCodigo.Models
         {
         }
 
-        public int Id { get; set; }
         public string Nome { get; set; }
     }
 }

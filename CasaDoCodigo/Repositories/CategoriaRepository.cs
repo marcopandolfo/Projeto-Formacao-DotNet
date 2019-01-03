@@ -8,7 +8,7 @@ namespace CasaDoCodigo.Repositories
 {
     public interface ICategoriaRepository
     {
-        void NovaCategoria(string nome);
+        Task<Categoria> NovaCategoria(string nome);
     }
 
     public class CategoriaRepository : BaseRepository<Categoria>, ICategoriaRepository
@@ -17,21 +17,22 @@ namespace CasaDoCodigo.Repositories
         {
         }
 
-        public async void NovaCategoria(string nome) //método assíncrono para salvar uma nova categoria
+        public async Task<Categoria> NovaCategoria(string nome) //método assíncrono para salvar uma nova categoria
         {
             var categoria = dbSet.Where(c => c.Nome == nome)
                 .SingleOrDefault();
-            
-            if(categoria == null) // Se a categoria for nula, ou seja, se nao existir, ai ele cria a categoria
+
+            if (categoria == null) // Se a categoria for nula, ou seja, se nao existir, ai ele cria a categoria
             {
                 var novaCategoria = new Categoria()
                 {
                     Nome = nome
                 };
 
-                dbSet.Add(novaCategoria);
+                categoria = dbSet.Add(novaCategoria).Entity;
             }
             await contexto.SaveChangesAsync();
+            return categoria;
         }
     }
 }
