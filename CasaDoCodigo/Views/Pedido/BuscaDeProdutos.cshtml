@@ -24,7 +24,7 @@
     var produtos = Model.ToList();
 
     var categorias = produtos
-                 .GroupBy(x => x.Categoria.Nome)
+                 .GroupBy(x => x.Categoria)
                  .Where(g => g.Count() > 1)
                  .Select(g => g.Key)
                  .ToList();
@@ -34,16 +34,18 @@
 
     foreach (var categoria in categorias) //Para cada  categoria vou criar um carrossel
     {
-        <h3>@categoria</h3>
+        var produtosNaCategoria = produtos.Where(p => p.Categoria.Id == categoria.Id);
 
-        <div id="my-carousel" class="carousel slide" data-ride="carousel">
+        <h3>@categoria.Nome</h3>
+
+        <div id="my-carousel-@categoria.Id" class="carousel slide" data-ride="carousel">
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
 
                 @{
                     const int TAMANHO_PAGINA = 4;
 
-                    int paginas = (int)Math.Ceiling((double)Model.Count() / TAMANHO_PAGINA);
+                    int paginas = (int)Math.Ceiling((double)produtosNaCategoria.Count() / TAMANHO_PAGINA);
                 }
 
 
@@ -53,7 +55,7 @@
                         <div class="row">
 
                             @{
-                                var produtosDaPagina = Model.Skip(pagina * TAMANHO_PAGINA).Where(p => p.Categoria.Nome == categoria).Take(TAMANHO_PAGINA); //Pega os produtos, mas somente da categoria atual
+                                var produtosDaPagina = Model.Skip(pagina * TAMANHO_PAGINA).Where(p => p.Categoria.Nome == categoria.Nome).Take(TAMANHO_PAGINA); //Pega os produtos, mas somente da categoria atual
                             }
 
                             @foreach (var produto in produtosDaPagina)
@@ -83,11 +85,11 @@
             </div>
 
             <!-- Controls -->
-            <a class="left carousel-control" href="#my-carousel" role="button" data-slide="prev">
+            <a class="left carousel-control" href="#my-carousel-@categoria.Id" role="button" data-slide="prev">
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="right carousel-control" href="#my-carousel" role="button" data-slide="next">
+            <a class="right carousel-control" href="#my-carousel-@categoria.Id" role="button" data-slide="next">
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
