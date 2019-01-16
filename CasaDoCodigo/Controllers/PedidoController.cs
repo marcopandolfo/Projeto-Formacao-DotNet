@@ -54,9 +54,26 @@ namespace CasaDoCodigo.Controllers
             return View(pedido.Cadastro);
         }
 
-        public async Task<IActionResult> BuscaDeProdutos()
+        public IActionResult BuscaDeProdutos(string pesquisa)
         {
-            return View(produtoRepository.GetProdutos());
+            // True = Houve resultado
+            // False = não houve resultado
+            if(string.IsNullOrEmpty(pesquisa)) //Se a pesquisa for vazia, retorna todos os produtos
+            {
+                var viewModel1 = new BuscaViewModel(produtoRepository.GetProdutos(), true);
+                return View(viewModel1);
+            }
+
+
+
+            if(produtoRepository.GetProdutos(pesquisa) == null) //Se o resultado da pesquisa for nulo
+            {
+                var viewModelComNenhumProdutoEncontrado = new BuscaViewModel(false); //Nao houve resultado, entao fica false
+                return View(viewModelComNenhumProdutoEncontrado); // Retorna a view sem resultado
+            }
+
+            var viewModel = new BuscaViewModel(produtoRepository.GetProdutos(pesquisa), true); //Retorna os produtos da pesquisa
+            return View(viewModel);
         }
 
 
