@@ -23,15 +23,14 @@ namespace CasaDoCodigo.Repositories
         }
         public IList<Produto> GetProdutos(string pesquisa)
         {
-            var TodosProdutos = dbSet.Include(p => p.Categoria).ToList();
-            var Pesquisa = TodosProdutos.Where(p => p.Nome == pesquisa || p.Categoria.Nome == pesquisa).ToList();
+            IQueryable<Produto> consulta = dbSet.Include(p => p.Categoria);
 
-            if (Pesquisa == null || Pesquisa.Count() == 0) //Se a pesquisa nao for encontrado, retorna todos os produtos
+            if (!string.IsNullOrWhiteSpace(pesquisa))
             {
-                return null;
+                consulta = consulta.Where(p => p.Nome.Contains(pesquisa) || p.Categoria.Nome.Contains(pesquisa));
             }
 
-            return Pesquisa;
+            return consulta.ToList();
         }
 
         public async Task SaveProdutos(List<Livro> livros)

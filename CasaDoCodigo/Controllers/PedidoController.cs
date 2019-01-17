@@ -66,7 +66,7 @@ namespace CasaDoCodigo.Controllers
 
 
 
-            if(produtoRepository.GetProdutos(pesquisa) == null) //Se o resultado da pesquisa for nulo
+            if(produtoRepository.GetProdutos(pesquisa).Count() == 0) //Se a pesquisa nao trazer resultados
             {
                 var viewModelComNenhumProdutoEncontrado = new BuscaViewModel(false); //Nao houve resultado, entao fica false
                 return View(viewModelComNenhumProdutoEncontrado); // Retorna a view sem resultado
